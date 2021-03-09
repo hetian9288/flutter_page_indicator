@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -40,7 +40,7 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
+  final String? title;
 
   @override
   _MyHomePageState createState() => new _MyHomePageState();
@@ -51,7 +51,8 @@ class RadioGroup extends StatefulWidget {
 
   final ValueChanged<int> onIndexChanged;
 
-  const RadioGroup({Key key, this.titles, this.onIndexChanged})
+  const RadioGroup(
+      {Key? key, required this.titles, required this.onIndexChanged})
       : super(key: key);
 
   @override
@@ -74,9 +75,9 @@ class _RadioGroupState extends State<RadioGroup> {
             new Radio<int>(
                 value: index,
                 groupValue: _index,
-                onChanged: (int index) {
+                onChanged: (int? index) {
                   setState(() {
-                    _index = index;
+                    _index = index ?? 0;
                     widget.onIndexChanged(_index);
                   });
                 }),
@@ -98,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
   double size = 20.0;
   double activeSize = 30.0;
 
-  PageController controller;
+  late TransformerPageController controller;
 
   PageIndicatorLayout layout = PageIndicatorLayout.SLIDE;
 
@@ -108,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    controller = new PageController();
+    controller = new TransformerPageController();
     super.initState();
   }
 
@@ -135,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
     return new Scaffold(
         appBar: new AppBar(
-          title: new Text(widget.title),
+          title: new Text(widget.title ?? ''),
         ),
         body: new Column(
           children: <Widget>[
@@ -143,17 +144,17 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                 new Checkbox(
                     value: loop,
-                    onChanged: (bool value) {
+                    onChanged: (bool? value) {
                       setState(() {
-                        if (value) {
+                        if (value != null && value == true) {
                           controller = new TransformerPageController(
                               itemCount: 4, loop: true);
                         } else {
-                          controller = new PageController(
+                          controller = new TransformerPageController(
                             initialPage: 0,
                           );
                         }
-                        loop = value;
+                        loop = value ?? false;
                       });
                     }),
                 new Text("loop"),
